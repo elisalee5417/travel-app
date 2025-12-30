@@ -8,51 +8,50 @@
     <style>
         :root {
             --bg-color: #FBFBFB; --card-bg: #FFFFFF; --text-main: #2D2D2D; --text-sub: #8C8C8C;
-            --accent-transport: #7A919E; --accent-food: #D4A373; --accent-ski: #5B7065;
-            --border-color: #EFEFEF;
+            --accent-ski: #5B7065; --accent-red: #D65A5A; --border-color: #EFEFEF;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body {
             font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-color);
-            color: var(--text-main); margin: 0; padding: 20px 16px 100px 16px; line-height: 1.5;
+            color: var(--text-main); margin: 0; padding: 20px 16px 100px 16px;
         }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
         header { margin-bottom: 25px; border-left: 4px solid var(--accent-ski); padding-left: 15px; }
-        h1 { font-size: 24px; margin: 0; letter-spacing: -0.5px; }
+        h1 { font-size: 24px; margin: 0; }
         .current-time { font-size: 12px; color: var(--text-sub); }
 
-        /* 住宿卡片滾動區 */
-        .stay-section { display: flex; overflow-x: auto; gap: 12px; margin-bottom: 25px; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
-        .stay-card { 
-            min-width: 260px; background: #fff; padding: 15px; border-radius: 16px; 
-            border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        /* 記帳頁面樣式 */
+        .budget-summary {
+            background: linear-gradient(135deg, #5B7065, #7A8B81);
+            color: white; border-radius: 20px; padding: 25px; margin-bottom: 20px;
         }
-        .stay-date { color: var(--accent-ski); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .stay-addr { font-size: 12px; color: var(--text-sub); margin-top: 5px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-        /* 行程卡片 */
-        .section-title { font-size: 13px; font-weight: 700; color: var(--text-sub); margin: 30px 0 12px 5px; display: flex; justify-content: space-between; }
-        .card { background: var(--card-bg); border-radius: 18px; padding: 18px; margin-bottom: 15px; border: 1px solid var(--border-color); }
-        .time-slot { font-size: 12px; font-weight: 700; color: var(--accent-transport); margin-bottom: 4px; display: block; }
-        .location-name { font-size: 17px; font-weight: 600; margin: 4px 0; }
-        .description { font-size: 13px; color: #555; margin-bottom: 12px; }
+        .budget-label { font-size: 12px; opacity: 0.8; }
+        .total-amount { font-size: 32px; font-weight: 700; margin: 5px 0; }
         
-        /* 標籤設計 */
-        .label { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-right: 4px; font-weight: 700; }
-        .label-food { background: #FCF5EB; color: #D4A373; }
-        .label-stay { background: #EEF2F0; color: #5B7065; }
-        .label-must { background: #FFE5E5; color: #D65A5A; }
-
-        /* 按鈕設計 */
-        .btn-group { display: flex; gap: 8px; }
-        .nav-btn {
-            flex: 1; display: flex; height: 42px; background: #F8F8F8; border-radius: 12px;
-            align-items: center; justify-content: center; text-decoration: none;
-            color: var(--text-main); font-size: 13px; border: 1px solid #EDEDED; gap: 6px; font-weight: 500;
+        .input-group { background: white; border-radius: 15px; padding: 15px; border: 1px solid var(--border-color); margin-bottom: 20px; }
+        .input-row { display: flex; gap: 10px; margin-bottom: 10px; }
+        input, select { 
+            border: 1px solid #DDD; border-radius: 8px; padding: 10px; font-size: 14px; outline: none; flex: 1;
+        }
+        .add-btn { 
+            background: var(--accent-ski); color: white; border: none; padding: 10px 20px; 
+            border-radius: 8px; font-weight: bold; width: 100%;
         }
 
-        /* 勾選清單 */
-        .check-item { display: flex; align-items: center; margin: 10px 0; font-size: 14px; color: #444; }
-        .check-item input { width: 18px; height: 18px; margin-right: 12px; accent-color: var(--accent-ski); }
+        .expense-list { margin-top: 20px; }
+        .expense-item {
+            background: white; border-bottom: 1px solid var(--border-color);
+            padding: 12px 5px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .item-info { display: flex; flex-direction: column; }
+        .item-title { font-size: 15px; font-weight: 500; }
+        .item-sub { font-size: 11px; color: var(--text-sub); }
+        .item-price { text-align: right; }
+        .price-jpy { font-size: 15px; font-weight: 600; }
+        .price-twd { font-size: 11px; color: var(--text-sub); }
 
         /* 底部導航 */
         .bottom-nav {
@@ -60,124 +59,147 @@
             background: rgba(255,255,255,0.95); backdrop-filter: blur(15px);
             border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding-top: 10px; z-index: 1000;
         }
-        .nav-item { font-size: 10px; color: var(--text-sub); text-align: center; text-decoration: none; flex: 1; }
+        .nav-item { font-size: 10px; color: var(--text-sub); text-align: center; text-decoration: none; flex: 1; border: none; background: none; }
+        .nav-item.active { color: var(--accent-ski); font-weight: bold; }
         .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
+
+        /* 行程卡片 (複用前版本) */
+        .card { background: #FFF; border-radius: 18px; padding: 18px; margin-bottom: 15px; border: 1px solid var(--border-color); }
+        .section-title { font-size: 13px; font-weight: 700; color: var(--text-sub); margin: 25px 0 10px 5px; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>2026 日本滑雪行</h1>
-        <div class="current-time" id="clock">正在讀取時間...</div>
+        <h1 id="page-title">2026 日本滑雪行</h1>
+        <div class="current-time" id="clock">Loading...</div>
     </header>
 
-    <div class="stay-section">
-        <div class="stay-card">
-            <span class="stay-date">FEB 21 - FEB 23</span>
-            <span class="label label-stay">Hotel A</span>
-            <b>上野/淺草區飯店</b>
-            <span class="stay-addr">靠近上野新幹線站</span>
+    <div id="itinerary-page" class="page active">
+        <div class="section-title">TODAY'S HIGHLIGHT</div>
+        <div class="card">
+            <b>2/22 よろにく 預約</b>
+            <p style="font-size:13px; color:#666;">記得準時 19:30 抵達惠比壽。</p>
         </div>
-        <div class="stay-card">
-            <span class="stay-date">FEB 23 - FEB 26</span>
-            <span class="label label-stay">Villa</span>
-            <b>石打丸山住宿</b>
-            <span class="stay-addr">190-1 Ishiuchi, Niigata</span>
-            <a href="https://www.google.com/maps/search/?api=1&query=190-1+Ishiuchi+Minamiuonuma+Niigata" class="nav-btn" style="margin-top:10px; height:32px; font-size:11px;">📍 開啟導航</a>
-        </div>
-        <div class="stay-card">
-            <span class="stay-date">FEB 26 - FEB 28</span>
-            <span class="label label-stay">Stay</span>
-            <b>葛飾區 Tateishi</b>
-            <span class="stay-addr">1 Chome-2-9 Tateishi, Tokyo</span>
-            <a href="https://www.google.com/maps/search/?api=1&query=1+Chome-2-9+Tateishi+Katsushika+Tokyo" class="nav-btn" style="margin-top:10px; height:32px; font-size:11px;">📍 開啟導航</a>
-        </div>
+        <p style="text-align:center; color:#999; font-size:12px;">(行程詳情已儲存...)</p>
     </div>
 
-    <div class="section-title"><span>DAY 1 · FEB 21 (SAT)</span><span>東京 ☁️ 8°C</span></div>
-    <div class="card">
-        <span class="time-slot">06:30 - 08:30</span>
-        <div class="location-name">成田機場入境</div>
-        <div class="description">
-            <span class="label label-must">提醒</span> 請先至京成電鐵櫃台領取 Skyliner 票卷。<br>
-            <b>交通費：</b>￥2,570 (Skyliner)
+    <div id="budget-page" class="page">
+        <div class="budget-summary">
+            <span class="budget-label">總支出估算 (TWD)</span>
+            <div class="total-amount" id="total-twd">NT$ 0</div>
+            <span class="budget-label">匯率參考 0.21</span>
         </div>
-        <div class="btn-group">
-            <a href="https://www.google.com/maps/search/?api=1&query=Narita+Airport+Terminal+2+3" class="nav-btn">🧭 機場地圖</a>
-        </div>
-    </div>
 
-    <div class="section-title"><span>DAY 2 · FEB 22 (SUN)</span><span>東京 ☀️ 10°C</span></div>
-    <div class="card">
-        <span class="time-slot">19:30 預約</span>
-        <div class="location-name">よろにく (蕃 Yoroniku)</div>
-        <div class="description">
-            <span class="label label-food">燒肉</span> 惠比壽名店<br>
-            <b>攻略：</b>這家店有專人代烤，必點「シルクロース」(絲滑牛背肉)。
+        <div class="input-group">
+            <div class="input-row">
+                <input type="text" id="exp-name" placeholder="項目內容 (如：晚餐)">
+                <select id="exp-cat">
+                    <option value="🍽️ 美食">美食</option>
+                    <option value="🚄 交通">交通</option>
+                    <option value="🏂 滑雪">滑雪</option>
+                    <option value="🛍️ 購物">購物</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <input type="number" id="exp-jpy" placeholder="金額 (JPY)">
+                <button class="add-btn" onclick="addExpense()">新增紀錄</button>
+            </div>
         </div>
-        <div class="btn-group">
-            <a href="https://www.google.com/maps/search/?api=1&query=Yoroniku+Ebisu" class="nav-btn">🍴 餐廳導航</a>
-        </div>
-    </div>
 
-    <div class="section-title"><span>DAY 3 · FEB 23 (MON)</span><span>越後湯澤 ❄️ -3°C</span></div>
-    <div class="card">
-        <span class="time-slot">交通移動</span>
-        <div class="location-name">上野 ➔ 越後湯澤 ➔ 石打丸山</div>
-        <div class="description">
-            1. 搭乘上越新幹線 (約 1 小時 15 分)。<br>
-            2. 抵達越後湯澤站後，搭乘接駁車往石打丸山。<br>
-            <b>費用：</b>Pass 涵蓋範圍。
-        </div>
-        <div class="btn-group">
-            <a href="https://www.google.com/maps/search/?api=1&query=Echigo-Yuzawa+Station" class="nav-btn">🚄 導航至湯澤站</a>
-        </div>
-    </div>
-
-    <div class="section-title"><span>DAY 7 · FEB 27 (FRI)</span><span>東京 ☀️ 9°C</span></div>
-    <div class="card">
-        <span class="time-slot">15:00 Check-in</span>
-        <div class="location-name">葛飾區住宿 (Tateishi)</div>
-        <div class="description">
-            <span class="label label-stay">新飯店</span> <b>1 Chome-2-9 Tateishi</b><br>
-            這區非常有昭和下町氛圍，推薦晚上去「立石仲見世商店街」體驗居酒屋文化。
-        </div>
-        <div class="btn-group">
-            <a href="https://www.google.com/maps/search/?api=1&query=1+Chome-2-9+Tateishi+Katsushika+Tokyo" class="nav-btn">📍 導航至住宿</a>
-        </div>
-    </div>
-
-    <div class="section-title"><span>DAY 8 · FEB 28 (SAT)</span><span>東京回程</span></div>
-    <div class="card" style="border: 2px solid #E8B49A;">
-        <span class="time-slot">13:30 前須抵達</span>
-        <div class="location-name">成田機場 T3 (樂桃航空)</div>
-        <div class="description">
-            <span class="label label-must">警告</span> <b>16:35 起飛</b>。樂桃在 T3，建議從上野搭 Skyliner 預留 3 小時抵達機場。
-        </div>
-        <div class="btn-group">
-            <a href="https://www.google.com/maps/search/?api=1&query=Narita+Airport+Terminal+3" class="nav-btn">✈️ 導航至 T3</a>
-        </div>
+        <div class="expense-list" id="expense-list">
+            </div>
+        
+        <button onclick="clearExpenses()" style="width:100%; background:none; border:none; color:var(--accent-red); font-size:12px; margin-top:20px; opacity:0.6;">清空所有資料</button>
     </div>
 
     <nav class="bottom-nav">
-        <a href="#" class="nav-item"><span class="nav-icon">🗓️</span>行程</a>
-        <a href="#" class="nav-item"><span class="nav-icon">💰</span>預算</a>
-        <a href="#" class="nav-item"><span class="nav-icon">🛍️</span>購物</a>
-        <a href="#" class="nav-item"><span class="nav-icon">ℹ️</span>須知</a>
+        <button class="nav-item active" onclick="showPage('itinerary')">
+            <span class="nav-icon">🗓️</span>行程
+        </button>
+        <button class="nav-item" onclick="showPage('budget')">
+            <span class="nav-icon">💰</span>記帳
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">🛍️</span>購物
+        </button>
+        <button class="nav-item">
+            <span class="nav-icon">ℹ️</span>須知
+        </button>
     </nav>
 
     <script>
+        const JPY_RATE = 0.21;
+        let expenses = JSON.parse(localStorage.getItem('trip_expenses')) || [];
+
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(pageId + '-page').classList.add('active');
+            event.currentTarget.classList.add('active');
+            document.getElementById('page-title').innerText = pageId === 'budget' ? '預算記帳' : '2026 日本滑雪行';
+        }
+
+        function addExpense() {
+            const name = document.getElementById('exp-name').value;
+            const jpy = document.getElementById('exp-jpy').value;
+            const cat = document.getElementById('exp-cat').value;
+
+            if (!name || !jpy) return alert('請填寫項目與金額');
+
+            const item = {
+                id: Date.now(),
+                name,
+                cat,
+                jpy: parseInt(jpy),
+                twd: Math.round(jpy * JPY_RATE)
+            };
+
+            expenses.unshift(item);
+            saveAndRender();
+            document.getElementById('exp-name').value = '';
+            document.getElementById('exp-jpy').value = '';
+        }
+
+        function saveAndRender() {
+            localStorage.setItem('trip_expenses', JSON.stringify(expenses));
+            const list = document.getElementById('expense-list');
+            list.innerHTML = '';
+            
+            let totalTwd = 0;
+            expenses.forEach(item => {
+                totalTwd += item.twd;
+                list.innerHTML += `
+                    <div class="expense-item">
+                        <div class="item-info">
+                            <span class="item-title">${item.cat} ${item.name}</span>
+                            <span class="item-sub">${new Date(item.id).toLocaleTimeString()}</span>
+                        </div>
+                        <div class="item-price">
+                            <span class="price-jpy">¥${item.jpy.toLocaleString()}</span>
+                            <div class="price-twd">約 NT$ ${item.twd.toLocaleString()}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            document.getElementById('total-twd').innerText = `NT$ ${totalTwd.toLocaleString()}`;
+        }
+
+        function clearExpenses() {
+            if (confirm('確定要清空記帳資料嗎？')) {
+                expenses = [];
+                saveAndRender();
+            }
+        }
+
         function updateTime() {
             const now = new Date();
-            const opt = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-            document.getElementById('clock').innerText = now.toLocaleString('zh-TW', opt);
+            document.getElementById('clock').innerText = now.toLocaleString('zh-TW', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
         }
-        setInterval(updateTime, 1000); updateTime();
 
-        document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
-            cb.checked = localStorage.getItem('trip-cb-'+i) === 'true';
-            cb.onchange = () => localStorage.setItem('trip-cb-'+i, cb.checked);
-        });
+        setInterval(updateTime, 1000);
+        updateTime();
+        saveAndRender(); // 初始載入
     </script>
 </body>
 </html>
