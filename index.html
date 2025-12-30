@@ -13,69 +13,64 @@
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
         body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-color); margin: 0; padding: 15px 16px 100px 16px; }
 
-        .page { display: none; }
-        .page.active { display: block; }
-
         header { margin-bottom: 15px; border-left: 4px solid var(--accent-ski); padding-left: 15px; }
         h1 { font-size: 20px; margin: 0; }
 
-        /* 縮小版預算看板 */
+        /* 看板瘦身 */
         .budget-header { 
             background: var(--accent-ski); color: white; border-radius: 18px; 
             padding: 15px 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center;
         }
-        .total-amount { font-size: 24px; font-weight: 800; }
+        .total-amount { font-size: 26px; font-weight: 800; }
         .rate-mini-box { background: rgba(255,255,255,0.15); padding: 8px 12px; border-radius: 10px; font-size: 11px; text-align: right; }
-        .rate-mini-box input { width: 50px; background: white; border: none; color: var(--accent-ski); font-weight: bold; text-align: center; border-radius: 5px; padding: 2px; margin-top: 2px; }
+        .rate-mini-box input { width: 50px; background: white; border: none; color: var(--accent-ski); font-weight: bold; text-align: center; border-radius: 5px; padding: 2px; }
 
-        /* 輸入與編輯區 */
-        .input-group { background: white; border-radius: 18px; padding: 15px; border: 1px solid var(--border-color); margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .edit-info { display: none; background: #FFF9E6; color: #856404; padding: 8px 12px; border-radius: 8px; font-size: 12px; margin-bottom: 10px; border-left: 4px solid #FFC107; }
+        /* 輸入區佈局 */
+        .input-group { background: white; border-radius: 18px; padding: 15px; border: 1px solid var(--border-color); margin-bottom: 15px; }
+        .edit-info { display: none; background: #FFF9E6; color: #856404; padding: 10px; border-radius: 8px; font-size: 12px; margin-bottom: 10px; border-left: 4px solid #FFC107; }
         .input-row { display: flex; gap: 8px; margin-bottom: 8px; }
         input, select { border: 1px solid #DDD; border-radius: 8px; padding: 10px; font-size: 14px; flex: 1; outline: none; background: white; }
         .add-btn { background: var(--accent-ski); color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; font-weight: bold; font-size: 15px; }
 
-        /* 日期分組摺疊卡片 */
+        /* 折疊式分組樣式 */
         .date-group { margin-bottom: 10px; border-radius: 15px; overflow: hidden; border: 1px solid var(--border-color); background: white; }
         .date-header { 
             background: #F8F9F8; padding: 12px 15px; font-weight: bold; font-size: 14px; 
             display: flex; justify-content: space-between; align-items: center; cursor: pointer;
         }
-        .date-header::after { content: '▼'; font-size: 10px; color: #CCC; transition: 0.3s; }
-        .date-group.closed .date-header::after { content: '◀'; }
+        .date-header::after { content: '▾'; color: #AAA; font-size: 16px; transition: 0.3s; }
+        .date-group.closed .date-header::after { transform: rotate(-90deg); }
         .date-group.closed .expense-container { display: none; }
         
+        /* 紀錄條目 */
         .expense-item { padding: 15px; border-top: 1px solid #F5F5F5; }
         .exp-main { display: flex; justify-content: space-between; align-items: flex-start; }
-        .exp-detail { flex: 1; }
-        .exp-price { text-align: right; min-width: 100px; }
-        .rate-tag { font-size: 12px; color: #888; background: #F3F3F3; padding: 2px 6px; border-radius: 4px; margin-top: 5px; display: inline-block; }
-        
+        .exp-price { text-align: right; min-width: 110px; }
+        .rate-tag { font-size: 13px; color: #666; background: #F3F3F3; padding: 2px 8px; border-radius: 6px; margin-top: 5px; display: inline-block; }
         .exp-ops { display: flex; gap: 15px; margin-top: 10px; justify-content: flex-end; }
-        .op-btn { font-size: 12px; border: none; background: none; color: var(--text-sub); padding: 5px; }
+        .op-btn { font-size: 13px; border: none; background: none; color: var(--text-sub); }
 
-        /* 導航 */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: white; display: flex; border-top: 1px solid var(--border-color); z-index: 1000; }
-        .nav-tab { flex: 1; border: none; background: none; color: var(--text-sub); font-size: 11px; }
+        /* 底部導航佔位 */
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: white; display: flex; border-top: 1px solid var(--border-color); }
+        .nav-tab { flex: 1; border: none; background: none; color: var(--text-sub); font-size: 11px; display: flex; flex-direction: column; align-items: center; justify-content: center; }
         .nav-tab.active { color: var(--accent-ski); font-weight: bold; }
-        .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
     </style>
 </head>
 <body>
 
     <header><h1>2026 日本滑雪行</h1></header>
 
-    <main id="page-budget" class="page active">
+    <main id="page-budget">
         <div class="budget-header">
             <div>
-                <span style="font-size: 11px; opacity: 0.8;">預算累計 (TWD)</span>
+                <span style="font-size: 11px; opacity: 0.8;">總計 (TWD)</span>
                 <div id="total-twd" class="total-amount">NT$ 0</div>
             </div>
             <div class="rate-mini-box">當前匯率<br><input type="number" step="0.001" id="current-rate" onchange="updateRate()"></div>
         </div>
 
         <div class="input-group">
-            <div id="edit-msg" class="edit-info">正在修改模式</div>
+            <div id="edit-msg" class="edit-info">模式：修改項目 (日期可同步調整)</div>
             <input type="hidden" id="edit-id">
             
             <div class="input-row">
@@ -96,7 +91,7 @@
             </div>
             <div class="input-row">
                 <input type="text" id="exp-name" placeholder="項目內容">
-                <input type="number" id="exp-jpy" placeholder="日幣金額">
+                <input type="number" id="exp-jpy" placeholder="日幣">
             </div>
             <div class="input-row">
                 <input type="text" id="exp-note" placeholder="備註 (選填)">
@@ -108,26 +103,26 @@
     </main>
 
     <nav class="bottom-nav">
-        <button class="nav-tab"><span class="nav-icon">🗓️</span>行程</button>
-        <button class="nav-tab active"><span class="nav-icon">💰</span>記帳</button>
+        <div class="nav-tab"><span style="font-size:22px">🗓️</span>行程</div>
+        <div class="nav-tab active"><span style="font-size:22px">💰</span>記帳</div>
     </nav>
 
     <script>
         let config = JSON.parse(localStorage.getItem('ski_cfg')) || {rate: 0.211};
         let expenses = JSON.parse(localStorage.getItem('ski_exp')) || [];
-        
-        // 初始化匯率與日期預設值
         document.getElementById('current-rate').value = config.rate;
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        const todayStr = `${yyyy}-${mm}-${dd}`;
-        
-        // 如果今天在旅行範圍內，預設選中今天
-        const dateSelector = document.getElementById('exp-date');
-        if([...dateSelector.options].some(opt => opt.value === todayStr)) {
-            dateSelector.value = todayStr;
+
+        // 初始化日期預設值
+        function initDefaultDate() {
+            const today = new Date();
+            const y = today.getFullYear();
+            const m = String(today.getMonth() + 1).padStart(2, '0');
+            const d = String(today.getDate()).padStart(2, '0');
+            const dateKey = `${y}-${m}-${d}`;
+            const select = document.getElementById('exp-date');
+            if ([...select.options].some(opt => opt.value === dateKey)) {
+                select.value = dateKey;
+            }
         }
 
         function updateRate() {
@@ -137,12 +132,12 @@
         }
 
         function addExpense() {
-            const n = document.getElementById('exp-name').value;
-            const j = document.getElementById('exp-jpy').value;
-            const nt = document.getElementById('exp-note').value;
-            const c = document.getElementById('exp-cat').value;
-            const d = document.getElementById('exp-date').value;
-            const editId = document.getElementById('edit-id').value;
+            const n = document.getElementById('exp-name').value, 
+                  j = document.getElementById('exp-jpy').value, 
+                  nt = document.getElementById('exp-note').value, 
+                  c = document.getElementById('exp-cat').value,
+                  d = document.getElementById('exp-date').value,
+                  editId = document.getElementById('edit-id').value;
             
             if(!n || !j) return;
 
@@ -157,9 +152,8 @@
                 expenses.push({id:Date.now(), n, j:parseInt(j), c, nt, twd: newTwd, rateAtTime: finalRate, date: d});
             }
             
-            // 排序：依日期由新到舊
+            // 排序：日期由新到舊
             expenses.sort((a, b) => new Date(b.date) - new Date(a.date));
-            
             localStorage.setItem('ski_exp', JSON.stringify(expenses));
             renderExp();
             clearInput();
@@ -175,9 +169,9 @@
             document.getElementById('edit-id').value = item.id;
             
             document.getElementById('edit-msg').style.display = 'block';
-            document.getElementById('submit-btn').innerText = '儲存修改';
+            document.getElementById('submit-btn').innerText = '儲存修改內容';
             document.getElementById('submit-btn').style.background = '#D4A373';
-            window.scrollTo(0, 0);
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         function cancelEdit() {
@@ -190,35 +184,35 @@
         function renderExp() {
             const listDiv = document.getElementById('expense-list');
             listDiv.innerHTML = '';
-            let total = 0;
+            let totalAll = 0;
 
-            // 按日期分組
-            const groups = expenses.reduce((acc, exp) => {
-                if (!acc[exp.date]) acc[exp.date] = [];
-                acc[exp.date].push(exp);
+            // 分組邏輯
+            const groups = expenses.reduce((acc, item) => {
+                if (!acc[item.date]) acc[item.date] = [];
+                acc[item.date].push(item);
                 return acc;
             }, {});
 
-            // 取得排序後的日期
+            // 取得排序後的日期鍵
             const sortedDates = Object.keys(groups).sort((a, b) => new Date(b) - new Date(a));
 
-            sortedDates.forEach(date => {
-                let dayTotal = groups[date].reduce((sum, item) => sum + item.twd, 0);
-                total += dayTotal;
+            sortedDates.forEach(dateKey => {
+                const dayItems = groups[dateKey];
+                const dayTotal = dayItems.reduce((s, i) => s + i.twd, 0);
+                totalAll += dayTotal;
 
-                const groupSection = document.createElement('div');
-                groupSection.className = 'date-group';
-                
-                // 格式化日期顯示
-                const displayDate = date.split('-').slice(1).join('/');
+                const dateParts = dateKey.split('-');
+                const displayDate = `${dateParts[1]}/${dateParts[2]}`;
 
-                groupSection.innerHTML = `
+                const groupDiv = document.createElement('div');
+                groupDiv.className = 'date-group';
+                groupDiv.innerHTML = `
                     <div class="date-header" onclick="this.parentElement.classList.toggle('closed')">
                         <span>📅 ${displayDate}</span>
-                        <span style="color:var(--accent-ski); font-size:13px;">小計 NT$ ${dayTotal.toLocaleString()}</span>
+                        <span style="color:var(--accent-ski); font-size:13px;">當日小計 NT$ ${dayTotal.toLocaleString()}</span>
                     </div>
                     <div class="expense-container">
-                        ${groups[date].map(i => `
+                        ${dayItems.map(i => `
                             <div class="expense-item">
                                 <div class="exp-main">
                                     <div class="exp-detail">
@@ -239,10 +233,10 @@
                         `).join('')}
                     </div>
                 `;
-                listDiv.appendChild(groupSection);
+                listDiv.appendChild(groupDiv);
             });
 
-            document.getElementById('total-twd').innerText = 'NT$ ' + total.toLocaleString();
+            document.getElementById('total-twd').innerText = 'NT$ ' + totalAll.toLocaleString();
         }
 
         function deleteExpense(id) {
@@ -253,12 +247,14 @@
             }
         }
 
-        function clearInput() { 
-            document.getElementById('exp-name').value=''; 
-            document.getElementById('exp-jpy').value=''; 
-            document.getElementById('exp-note').value=''; 
+        function clearInput() {
+            document.getElementById('exp-name').value='';
+            document.getElementById('exp-jpy').value='';
+            document.getElementById('exp-note').value='';
         }
 
+        // 啟動
+        initDefaultDate();
         renderExp();
     </script>
 </body>
