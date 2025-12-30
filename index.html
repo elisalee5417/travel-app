@@ -8,12 +8,16 @@
     <style>
         :root {
             --bg-color: #FBFBFB; --card-bg: #FFFFFF; --text-main: #2D2D2D; --text-sub: #8C8C8C;
-            --accent-ski: #5B7065; --accent-food: #D4A373; --accent-transport: #7A919E; --border-color: #EFEFEF;
+            --accent-transport: #7A919E; --accent-food: #D4A373; --accent-ski: #5B7065;
+            --border-color: #EFEFEF;
         }
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px 16px 100px 16px; line-height: 1.5; }
+        body {
+            font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-color);
+            color: var(--text-main); margin: 0; padding: 20px 16px 100px 16px; line-height: 1.5;
+        }
 
-        /* 分頁切換 */
+        /* 分頁切換核心 */
         .page { display: none; }
         .page.active { display: block; animation: fadeIn 0.2s ease-in; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -22,13 +26,35 @@
         h1 { font-size: 24px; margin: 0; letter-spacing: -0.5px; }
         .current-time { font-size: 12px; color: var(--text-sub); }
 
-        /* 行程卡片樣式 */
-        .stay-section { display: flex; overflow-x: auto; gap: 12px; margin-bottom: 25px; padding-bottom: 10px; }
-        .stay-card { min-width: 250px; background: #fff; padding: 15px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 2px 8px rgba(0,0,0,0.03); }
-        .stay-date { color: var(--accent-ski); font-weight: bold; font-size: 11px; }
-        .section-title { font-size: 13px; font-weight: 700; color: var(--text-sub); margin: 25px 0 10px 5px; }
-        .card { background: var(--card-bg); border-radius: 18px; padding: 18px; margin-bottom: 12px; border: 1px solid var(--border-color); }
-        .nav-btn { display: flex; width: 100%; height: 42px; background: #F8F8F8; border-radius: 10px; align-items: center; justify-content: center; text-decoration: none; color: var(--text-main); font-size: 13px; border: 1px solid #EDEDED; gap: 6px; }
+        /* 住宿卡片滾動區 */
+        .stay-section { display: flex; overflow-x: auto; gap: 12px; margin-bottom: 25px; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+        .stay-card { 
+            min-width: 260px; background: #fff; padding: 15px; border-radius: 16px; 
+            border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+        }
+        .stay-date { color: var(--accent-ski); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .stay-addr { font-size: 12px; color: var(--text-sub); margin-top: 5px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+        /* 行程卡片 */
+        .section-title { font-size: 13px; font-weight: 700; color: var(--text-sub); margin: 30px 0 12px 5px; display: flex; justify-content: space-between; }
+        .card { background: var(--card-bg); border-radius: 18px; padding: 18px; margin-bottom: 15px; border: 1px solid var(--border-color); }
+        .time-slot { font-size: 12px; font-weight: 700; color: var(--accent-transport); margin-bottom: 4px; display: block; }
+        .location-name { font-size: 17px; font-weight: 600; margin: 4px 0; }
+        .description { font-size: 13px; color: #555; margin-bottom: 12px; }
+        
+        /* 標籤設計 */
+        .label { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-right: 4px; font-weight: 700; }
+        .label-food { background: #FCF5EB; color: #D4A373; }
+        .label-stay { background: #EEF2F0; color: #5B7065; }
+        .label-must { background: #FFE5E5; color: #D65A5A; }
+
+        /* 按鈕設計 */
+        .btn-group { display: flex; gap: 8px; }
+        .nav-btn {
+            flex: 1; display: flex; height: 42px; background: #F8F8F8; border-radius: 12px;
+            align-items: center; justify-content: center; text-decoration: none;
+            color: var(--text-main); font-size: 13px; border: 1px solid #EDEDED; gap: 6px; font-weight: 500;
+        }
 
         /* 記帳頁面樣式 */
         .budget-summary { background: #5B7065; color: white; border-radius: 20px; padding: 25px; margin-bottom: 20px; text-align: center; }
@@ -43,17 +69,21 @@
         .expense-note { font-size: 11px; color: #D4A373; margin-top: 4px; background: #FCF5EB; padding: 2px 6px; border-radius: 4px; display: inline-block; }
 
         /* 底部導航 */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 75px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-top: 1px solid var(--border-color); display: flex; z-index: 1000; }
-        .nav-tab { flex: 1; border: none; background: none; color: var(--text-sub); display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; }
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(15px);
+            border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding-top: 10px; z-index: 1000;
+        }
+        .nav-tab { font-size: 10px; color: var(--text-sub); text-align: center; text-decoration: none; flex: 1; border: none; background: none; }
         .nav-tab.active { color: var(--accent-ski); font-weight: bold; }
-        .nav-icon { font-size: 22px; margin-bottom: 2px; }
+        .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
     </style>
 </head>
 <body>
 
     <header>
         <h1 id="header-title">2026 日本滑雪行</h1>
-        <div class="current-time" id="clock">Loading...</div>
+        <div class="current-time" id="clock">讀取時間中...</div>
     </header>
 
     <main id="page-itinerary" class="page active">
@@ -69,8 +99,19 @@
             <div class="rate-editor">1 JPY = <input type="number" step="0.001" id="current-rate" onchange="updateRate()"> TWD</div>
         </div>
         <div class="input-group">
-            <div class="input-row"><input type="text" id="exp-name" placeholder="項目"><select id="exp-cat"><option value="🍽️ 美食">美食</option><option value="🚄 交通">交通</option><option value="🏂 滑雪">滑雪</option><option value="🛍️ 購物">購物</option></select></div>
-            <div class="input-row"><input type="number" id="exp-jpy" placeholder="日幣"><input type="text" id="exp-note" placeholder="備註"></div>
+            <div class="input-row">
+                <input type="text" id="exp-name" placeholder="項目">
+                <select id="exp-cat">
+                    <option value="🍽️ 美食">美食</option>
+                    <option value="🚄 交通">交通</option>
+                    <option value="🏂 滑雪">滑雪</option>
+                    <option value="🛍️ 購物">購物</option>
+                </select>
+            </div>
+            <div class="input-row">
+                <input type="number" id="exp-jpy" placeholder="日幣">
+                <input type="text" id="exp-note" placeholder="備註 (如: 刷哪張卡)">
+            </div>
             <button class="add-btn" onclick="addExpense()">新增紀錄</button>
         </div>
         <div id="expense-list"></div>
@@ -84,12 +125,12 @@
 
     <main id="page-info" class="page">
         <div class="section-title">旅行須知</div>
-        <div class="card" id="info-content"></div>
+        <div id="info-content" class="card"></div>
     </main>
 
     <nav class="bottom-nav">
         <button onclick="switchTab('itinerary')" id="tab-itinerary" class="nav-tab active"><span class="nav-icon">🗓️</span>行程</button>
-        <button onclick="switchTab('budget')" id="tab-budget" class="nav-tab"><span class="nav-icon">💰</span>記帳</button>
+        <button onclick="switchTab('budget')" id="tab-budget" class="nav-tab"><span class="nav-icon">💰</span>預算</button>
         <button onclick="switchTab('shopping')" id="tab-shopping" class="nav-tab"><span class="nav-icon">🛍️</span>購物</button>
         <button onclick="switchTab('info')" id="tab-info" class="nav-tab"><span class="nav-icon">ℹ️</span>須知</button>
     </nav>
@@ -97,59 +138,89 @@
     <script>
         /**
          * ==========================================
-         * 1. 編輯區：這裡是你未來唯一需要修改的地方
+         * 編輯區：修改這裡的文字，畫面就會更新
          * ==========================================
          */
         const tripData = {
             hotels: [
-                { date: "2/21 - 2/23", name: "上野飯店", desc: "靠近新幹線站", map: "" },
-                { date: "2/23 - 2/26", name: "石打丸山 VILLA", desc: "190-1 Ishiuchi, Niigata", map: "https://www.google.com/maps/search/190-1+Ishiuchi" },
-                { date: "2/26 - 2/28", name: "葛飾區住宿", desc: "1-2-9 Tateishi, Tokyo", map: "https://www.google.com/maps/search/1-2-9+Tateishi" }
+                { date: "FEB 21 - FEB 23", type: "Hotel A", name: "上野/淺草區飯店", addr: "靠近上野新幹線站", map: "" },
+                { date: "FEB 23 - FEB 26", type: "Villa", name: "石打丸山住宿", addr: "190-1 Ishiuchi, Niigata", map: "https://www.google.com/maps/search/?api=1&query=190-1+Ishiuchi+Minamiuonuma+Niigata" },
+                { date: "FEB 26 - FEB 28", type: "Stay", name: "葛飾區 Tateishi", addr: "1 Chome-2-9 Tateishi, Tokyo", map: "https://www.google.com/maps/search/?api=1&query=1+Chome-2-9+Tateishi+Katsushika+Tokyo" }
             ],
             days: [
-                { title: "DAY 1 · 2/21 (SAT)", loc: "成田機場 T3 ➔ 上野", desc: "06:30 抵達。換 Skyliner 票，飯店寄行李。", map: "https://www.google.com/maps/search/成田機場T3" },
-                { title: "DAY 2 · 2/22 (SUN)", loc: "よろにく (Yoroniku)", desc: "19:30 預約。惠比壽店。必吃絲滑牛。店名日文：よろにく", map: "https://www.google.com/maps/search/よろにく+惠比壽" },
-                { title: "DAY 3 · 2/23 (MON)", loc: "移動至 越後湯澤", desc: "搭乘新幹線，開始滑雪行程。", map: "https://www.google.com/maps/search/越後湯澤站" },
-                { title: "DAY 8 · 2/28 (SAT)", loc: "回程：成田機場 T3", desc: "16:35 起飛。最晚 13:30 要從上野出發。", map: "" }
+                { 
+                    title: "DAY 1 · FEB 21 (SAT)", weather: "東京 ☁️ 8°C", 
+                    time: "06:30 - 08:30", loc: "成田機場入境", 
+                    label: "提醒", labelClass: "label-must",
+                    desc: "請先至京成電鐵櫃台領取 Skyliner 票卷。<br><b>交通費：</b>￥2,570",
+                    map: "https://www.google.com/maps/search/?api=1&query=Narita+Airport+Terminal+2+3", mapText: "🧭 機場地圖"
+                },
+                { 
+                    title: "DAY 2 · FEB 22 (SUN)", weather: "東京 ☀️ 10°C", 
+                    time: "19:30 預約", loc: "よろにく (蕃 Yoroniku)", 
+                    label: "燒肉", labelClass: "label-food",
+                    desc: "惠比壽名店。這家店有專人代烤，必點「シルクロース」。",
+                    map: "https://www.google.com/maps/search/?api=1&query=Yoroniku+Ebisu", mapText: "🍴 餐廳導航"
+                },
+                { 
+                    title: "DAY 3 · FEB 23 (MON)", weather: "越後湯澤 ❄️ -3°C", 
+                    time: "交通移動", loc: "上野 ➔ 越後湯澤 ➔ 石打丸山", 
+                    label: "新幹線", labelClass: "label-stay",
+                    desc: "搭乘上越新幹線 (約 1h 15m)。抵達後搭接駁車往石打丸山。",
+                    map: "https://www.google.com/maps/search/?api=1&query=Echigo-Yuzawa+Station", mapText: "🚄 導航至湯澤站"
+                },
+                { 
+                    title: "DAY 8 · FEB 28 (SAT)", weather: "東京回程", 
+                    time: "13:30 前須抵達", loc: "成田機場 T3 (樂桃)", 
+                    label: "警告", labelClass: "label-must",
+                    desc: "<b>16:35 起飛</b>。樂桃在 T3，建議搭 Skyliner 預留 3 小時抵達。",
+                    map: "https://www.google.com/maps/search/?api=1&query=Narita+Airport+Terminal+3", mapText: "✈️ 導航至 T3"
+                }
             ],
-            shopping: ["雪衣/雪褲 (神田雪具街)", "護目鏡", "滑雪襪", "藥妝"],
-            info: "穿搭：市區 10度/雪場 -5度，採洋蔥式穿法。記得帶 JR Pass 與 完美行雪票預約 QR Code。"
+            shopping: ["雪衣/雪褲 (神田雪具街)", "護目鏡", "滑雪襪", "立石仲見世商店街雜貨"],
+            info: "穿搭建議：市區 10度/雪場 -5度。採洋蔥式穿法。<br>記得領取 JR Pass、Skyliner 與 WAmazing 雪票 QR Code。"
         };
 
         /**
          * ==========================================
-         * 2. 邏輯區：除非要改功能，否則不需要動這裡
+         * 邏輯區
          * ==========================================
          */
-        
-        // 初始化行程內容
         function initTrip() {
-            const hList = document.getElementById('hotel-list');
-            hList.innerHTML = tripData.hotels.map(h => `
+            // 渲染飯店
+            document.getElementById('hotel-list').innerHTML = tripData.hotels.map(h => `
                 <div class="stay-card">
-                    <span class="stay-date">${h.date}</span><br><b>${h.name}</b><br>
-                    <span style="font-size:11px;color:#888;">${h.desc}</span>
-                    ${h.map ? `<a href="${h.map}" class="nav-btn" style="height:28px;font-size:11px;margin-top:5px;">開啟導航</a>` : ''}
+                    <span class="stay-date">${h.date}</span>
+                    <span class="label label-stay">${h.type}</span>
+                    <b>${h.name}</b>
+                    <span class="stay-addr">${h.addr}</span>
+                    ${h.map ? `<a href="${h.map}" class="nav-btn" style="margin-top:10px; height:32px; font-size:11px;">📍 開啟導航</a>` : ''}
                 </div>
             `).join('');
 
-            const dList = document.getElementById('day-list');
-            dList.innerHTML = tripData.days.map(d => `
-                <div class="section-title">${d.title}</div>
+            // 渲染行程
+            document.getElementById('day-list').innerHTML = tripData.days.map(d => `
+                <div class="section-title"><span>${d.title}</span><span>${d.weather}</span></div>
                 <div class="card">
+                    <span class="time-slot">${d.time}</span>
                     <div class="location-name">${d.loc}</div>
-                    <p style="font-size:13px;color:#666;">${d.desc}</p>
-                    ${d.map ? `<a href="${d.map}" class="nav-btn">🧭 導航連結</a>` : ''}
+                    <div class="description">
+                        <span class="label ${d.labelClass}">${d.label}</span> ${d.desc}
+                    </div>
+                    <div class="btn-group">
+                        <a href="${d.map}" class="nav-btn">${d.mapText}</a>
+                    </div>
                 </div>
             `).join('');
 
-            document.getElementById('shopping-list').innerHTML = tripData.shopping.map(s => `
-                <label style="display:block;margin:10px 0;"><input type="checkbox"> ${s}</label>
+            // 渲染購物與須知
+            document.getElementById('shopping-list').innerHTML = tripData.shopping.map((s, i) => `
+                <div class="check-item"><input type="checkbox" id="shop-${i}"> <label for="shop-${i}">${s}</label></div>
             `).join('');
-            document.getElementById('info-content').innerHTML = `<p>${tripData.info}</p>`;
+            document.getElementById('info-content').innerHTML = tripData.info;
         }
 
-        // 分頁、記帳、時間等邏輯 (維持穩定版本)
+        // 分頁切換
         function switchTab(t) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
@@ -159,18 +230,26 @@
             window.scrollTo(0,0);
         }
 
+        // 記帳系統
         let config = JSON.parse(localStorage.getItem('ski_cfg')) || {rate: 0.21};
         let expenses = JSON.parse(localStorage.getItem('ski_exp')) || [];
         document.getElementById('current-rate').value = config.rate;
 
-        function updateRate() { config.rate = parseFloat(document.getElementById('current-rate').value); localStorage.setItem('ski_cfg', JSON.stringify(config)); renderExp(); }
+        function updateRate() { 
+            config.rate = parseFloat(document.getElementById('current-rate').value); 
+            localStorage.setItem('ski_cfg', JSON.stringify(config)); 
+            renderExp(); 
+        }
+
         function addExpense() {
             const n = document.getElementById('exp-name').value, j = document.getElementById('exp-jpy').value, nt = document.getElementById('exp-note').value, c = document.getElementById('exp-cat').value;
             if(!n || !j) return;
             expenses.unshift({id:Date.now(), n, j:parseInt(j), c, nt, twd:Math.round(j*config.rate)});
             localStorage.setItem('ski_exp', JSON.stringify(expenses));
-            renderExp(); document.getElementById('exp-name').value=''; document.getElementById('exp-jpy').value=''; document.getElementById('exp-note').value='';
+            renderExp(); 
+            document.getElementById('exp-name').value=''; document.getElementById('exp-jpy').value=''; document.getElementById('exp-note').value='';
         }
+
         function renderExp() {
             const l = document.getElementById('expense-list'); l.innerHTML = ''; let total = 0;
             expenses.forEach(i => { total += i.twd; l.innerHTML += `
@@ -179,8 +258,13 @@
             });
             document.getElementById('total-twd').innerText = 'NT$ ' + total.toLocaleString();
         }
-        function clearExpenses() { if(confirm('清空資料？')) { expenses=[]; localStorage.setItem('ski_exp', JSON.stringify(expenses)); renderExp(); } }
-        function updateTime() { document.getElementById('clock').innerText = new Date().toLocaleString('zh-TW', {weekday:'short', month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'}); }
+
+        function clearExpenses() { if(confirm('確定清空所有記帳紀錄？')) { expenses=[]; localStorage.setItem('ski_exp', JSON.stringify(expenses)); renderExp(); } }
+
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('clock').innerText = now.toLocaleString('zh-TW', { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+        }
 
         setInterval(updateTime, 1000); updateTime(); initTrip(); renderExp();
     </script>
