@@ -1,28 +1,188 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>旅遊小工具</title
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Jiang_ez 日本滑雪行</title>
+    <style>
+        :root {
+            --bg-color: #F8F7F2;
+            --card-bg: #FFFFFF;
+            --text-main: #333333;
+            --text-sub: #888888;
+            --accent-blue: #A5C8D0; /* 交通 */
+            --accent-green: #B8C4A0; /* 景點/住宿 */
+            --accent-orange: #E8B49A; /* 美食 */
+            --tag-bg: #F0F0F0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 30px;
+            padding-left: 10px;
+        }
+
+        h1 { font-size: 24px; font-weight: 600; margin-bottom: 5px; }
+        .subtitle { font-size: 14px; color: var(--text-sub); }
+
+        /* Tabs/Section Title */
+        .section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-sub);
+            margin: 25px 0 15px 10px;
+        }
+
+        /* Card Style */
+        .card {
+            background: var(--card-bg);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            border: 1px solid rgba(0,0,0,0.02);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .weather { font-size: 13px; color: #555; }
+
+        .type-tag {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: inline-block;
+        }
+
+        .type-transport { background: var(--accent-blue); color: white; }
+        .type-food { background: var(--accent-orange); color: white; }
+        .type-ski { background: #5A7684; color: white; }
+
+        .location-name { font-size: 18px; font-weight: 600; margin: 5px 0; }
+        .description { font-size: 14px; color: var(--text-sub); margin-bottom: 15px; }
+
+        /* Action Buttons */
+        .btn-group { display: flex; gap: 10px; }
+        
+        .nav-btn {
+            flex: 1;
+            background: var(--tag-bg);
+            text-align: center;
+            padding: 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            background: #fdf2f2;
+            color: #d9534f;
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-right: 5px;
+            border: 1px solid #f8d7da;
+        }
+
+        /* Bottom Nav (Simulated) */
+        .bottom-spacer { height: 80px; }
+    </style>
 </head>
 <body>
-  <header>我的旅遊小工具</header>
 
-  <main>
+    <header>
+        <h1>2026 日本滑雪行</h1>
+        <div class="subtitle">Jiang_ez · 8 Days Journey</div>
+    </header>
+
+    <div class="section-title">TODAY · FEB 21</div>
+
     <div class="card">
-      <h2>京都清水寺</h2>
-      <p>類型：景點</p>
-      <p><strong>必拍角度：三重塔</strong></p>
-      <button>導航</button>
+        <div class="card-header">
+            <span class="type-tag type-transport">大眾交通</span>
+            <span class="weather">☁️ 8°C</span>
+        </div>
+        <div class="location-name">成田機場 ➔ 上野/市區</div>
+        <div class="description">搭乘 Skyliner 約 41 分鐘直達。記得先在櫃檯兌換周遊券。</div>
+        <div class="btn-group">
+            <a href="https://www.google.com/maps/dir/?api=1&destination=Narita+Airport" class="nav-btn">📍 導航 (交通)</a>
+        </div>
     </div>
 
     <div class="card">
-      <h2>一蘭拉麵</h2>
-      <p>類型：餐廳</p>
-      <p><strong>必點：特製豚骨拉麵</strong></p>
-      <button>導航</button>
+        <div class="card-header">
+            <span class="type-tag" style="background: var(--accent-green); color:white;">雪具店</span>
+        </div>
+        <div class="location-name">Switch Active Sports East</div>
+        <div class="description">
+            <span class="badge">必逛</span> <b>專業雪板與裝備</b><br>
+            預計在這裡採購今年度新雪衣與手套。
+        </div>
+        <div class="btn-group">
+            <a href="https://www.google.com/maps/search/?api=1&query=Switch+Active+Sports+East" class="nav-btn">📍 導航</a>
+        </div>
     </div>
-  </main>
+
+    <div class="section-title">UPCOMING · FEB 22</div>
+
+    <div class="card">
+        <div class="card-header">
+            <span class="type-tag type-food">美食預約</span>
+        </div>
+        <div class="location-name">Yoroniku Ebisu (蕃)</div>
+        <div class="description">
+            <span class="badge" style="color:#856404; background:#fff3cd; border:1px solid #ffeeba;">代號: R77821</span>
+            <b>必點：絲滑牛背肉</b><br>
+            2/22 19:30 預約，請提早 10 分鐘抵達。
+        </div>
+        <div class="btn-group">
+            <a href="https://www.google.com/maps/search/?api=1&query=Yoroniku+Ebisu" class="nav-btn">📍 餐廳導航</a>
+        </div>
+    </div>
+
+    <div class="section-title">SKILLING · FEB 23-26</div>
+    
+    <div class="card">
+        <div class="card-header">
+            <span class="type-tag type-ski">滑雪連戰</span>
+            <span class="weather">❄️ -3°C</span>
+        </div>
+        <div class="location-name">石打丸山滑雪場</div>
+        <div class="description">
+            <b>かみきや租賃預約：</b>已確認<br>
+            住宿：190-1 Ishiuchi
+        </div>
+        <div class="btn-group">
+            <a href="https://www.google.com/maps/search/?api=1&query=Ishiuchi+Maruyama" class="nav-btn">📍 前往雪場</a>
+        </div>
+    </div>
+
+    <div class="bottom-spacer"></div>
+
 </body>
 </html>
