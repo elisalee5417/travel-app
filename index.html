@@ -7,163 +7,61 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #FBFBFB;
-            --card-bg: #FFFFFF;
-            --text-main: #2D2D2D;
-            --text-sub: #8C8C8C;
-            --accent-transport: #7A919E; /* 莫蘭迪藍 */
-            --accent-food: #D4A373;      /* 焦糖色 */
-            --accent-ski: #5B7065;       /* 森林綠 */
-            --accent-info: #A5A5A5;
-            --tag-bg: #F5F5F5;
+            --bg-color: #FBFBFB; --card-bg: #FFFFFF; --text-main: #2D2D2D; --text-sub: #8C8C8C;
+            --accent-transport: #7A919E; --accent-food: #D4A373; --accent-ski: #5B7065;
             --border-color: #EFEFEF;
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body {
-            font-family: 'Noto Sans TC', -apple-system, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px 16px 100px 16px;
-            line-height: 1.6;
+            font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-color);
+            color: var(--text-main); margin: 0; padding: 20px 16px 100px 16px; line-height: 1.5;
         }
+        header { margin-bottom: 25px; border-left: 4px solid var(--accent-ski); padding-left: 15px; }
+        h1 { font-size: 24px; margin: 0; letter-spacing: -0.5px; }
+        .current-time { font-size: 12px; color: var(--text-sub); }
 
-        /* Header */
-        header {
-            margin-top: 20px;
-            margin-bottom: 30px;
+        /* 住宿卡片滾動區 */
+        .stay-section { display: flex; overflow-x: auto; gap: 12px; margin-bottom: 25px; padding-bottom: 10px; -webkit-overflow-scrolling: touch; }
+        .stay-card { 
+            min-width: 260px; background: #fff; padding: 15px; border-radius: 16px; 
+            border: 1px solid var(--border-color); box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
+        .stay-date { color: var(--accent-ski); font-weight: bold; font-size: 11px; text-transform: uppercase; margin-bottom: 4px; display: block; }
+        .stay-addr { font-size: 12px; color: var(--text-sub); margin-top: 5px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-        h1 { font-size: 26px; font-weight: 700; margin: 0; letter-spacing: 1px; }
-        .current-time { font-size: 13px; color: var(--text-sub); margin-top: 5px; }
+        /* 行程卡片 */
+        .section-title { font-size: 13px; font-weight: 700; color: var(--text-sub); margin: 30px 0 12px 5px; display: flex; justify-content: space-between; }
+        .card { background: var(--card-bg); border-radius: 18px; padding: 18px; margin-bottom: 15px; border: 1px solid var(--border-color); }
+        .time-slot { font-size: 12px; font-weight: 700; color: var(--accent-transport); margin-bottom: 4px; display: block; }
+        .location-name { font-size: 17px; font-weight: 600; margin: 4px 0; }
+        .description { font-size: 13px; color: #555; margin-bottom: 12px; }
+        
+        /* 標籤設計 */
+        .label { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 4px; margin-right: 4px; font-weight: 700; }
+        .label-food { background: #FCF5EB; color: #D4A373; }
+        .label-stay { background: #EEF2F0; color: #5B7065; }
+        .label-must { background: #FFE5E5; color: #D65A5A; }
 
-        /* Bottom Tab Bar (原生 App 感) */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 70px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding-bottom: 15px;
-            z-index: 100;
-        }
-
-        .nav-item { font-size: 11px; color: var(--text-sub); text-align: center; text-decoration: none; }
-        .nav-item.active { color: var(--text-main); font-weight: bold; }
-        .nav-icon { font-size: 20px; display: block; margin-bottom: 2px; }
-
-        /* Section Title */
-        .section-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-sub);
-            margin: 30px 0 15px 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* Card Design */
-        .card {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.02);
-            border: 1px solid var(--border-color);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .type-tag {
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: 50px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-
-        .tag-transport { background: #E9ECEF; color: var(--accent-transport); }
-        .tag-food { background: #FCF5EB; color: var(--accent-food); }
-        .tag-ski { background: #EEF2F0; color: var(--accent-ski); }
-
-        .weather-info { font-size: 13px; color: var(--text-sub); }
-
-        .location-name { font-size: 19px; font-weight: 600; margin: 8px 0; color: #1a1a1a; }
-        .description { font-size: 14px; color: #555; margin-bottom: 15px; }
-
-        /* Guide Badges */
-        .label {
-            display: inline-block;
-            font-size: 11px;
-            padding: 2px 8px;
-            border-radius: 4px;
-            margin-right: 5px;
-            font-weight: bold;
-        }
-        .label-must-eat { background: #FFE5E5; color: #D65A5A; }
-        .label-reserve { background: #FFF4E0; color: #B38B4D; }
-
-        /* Checkbox List */
-        .check-item {
-            display: flex;
-            align-items: center;
-            margin: 10px 0;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        .check-item input {
-            width: 18px;
-            height: 18px;
-            margin-right: 12px;
-            accent-color: var(--accent-ski);
-        }
-
-        /* Buttons */
+        /* 按鈕設計 */
+        .btn-group { display: flex; gap: 8px; }
         .nav-btn {
-            display: flex;
-            width: 100%;
-            height: 44px;
-            background: #F8F8F8;
-            border-radius: 12px;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            color: var(--text-main);
-            font-size: 14px;
-            font-weight: 500;
-            border: 1px solid #EDEDED;
-            gap: 8px;
+            flex: 1; display: flex; height: 42px; background: #F8F8F8; border-radius: 12px;
+            align-items: center; justify-content: center; text-decoration: none;
+            color: var(--text-main); font-size: 13px; border: 1px solid #EDEDED; gap: 6px; font-weight: 500;
         }
 
-        /* Info Section */
-        .info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-        .info-box {
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            border: 1px solid var(--border-color);
-        }
-        .info-label { font-size: 11px; color: var(--text-sub); display: block; }
-        .info-value { font-size: 14px; font-weight: 600; margin-top: 4px; }
+        /* 勾選清單 */
+        .check-item { display: flex; align-items: center; margin: 10px 0; font-size: 14px; color: #444; }
+        .check-item input { width: 18px; height: 18px; margin-right: 12px; accent-color: var(--accent-ski); }
 
+        /* 底部導航 */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; height: 75px;
+            background: rgba(255,255,255,0.95); backdrop-filter: blur(15px);
+            border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; padding-top: 10px; z-index: 1000;
+        }
+        .nav-item { font-size: 10px; color: var(--text-sub); text-align: center; text-decoration: none; flex: 1; }
+        .nav-icon { font-size: 22px; display: block; margin-bottom: 2px; }
     </style>
 </head>
 <body>
@@ -173,102 +71,112 @@
         <div class="current-time" id="clock">正在讀取時間...</div>
     </header>
 
-    <div class="info-grid">
-        <div class="info-box">
-            <span class="info-label">住宿資訊</span>
-            <div class="info-value">石打丸山 VILLA</div>
+    <div class="stay-section">
+        <div class="stay-card">
+            <span class="stay-date">FEB 21 - FEB 23</span>
+            <span class="label label-stay">Hotel A</span>
+            <b>上野/淺草區飯店</b>
+            <span class="stay-addr">靠近上野新幹線站</span>
         </div>
-        <div class="info-box" onclick="location.href='tel:080-000-0000'">
-            <span class="info-label">緊急電話 (日本)</span>
-            <div class="info-value">🚑 119 / 👮 110</div>
+        <div class="stay-card">
+            <span class="stay-date">FEB 23 - FEB 26</span>
+            <span class="label label-stay">Villa</span>
+            <b>石打丸山住宿</b>
+            <span class="stay-addr">190-1 Ishiuchi, Niigata</span>
+            <a href="https://www.google.com/maps/search/?api=1&query=190-1+Ishiuchi+Minamiuonuma+Niigata" class="nav-btn" style="margin-top:10px; height:32px; font-size:11px;">📍 開啟導航</a>
+        </div>
+        <div class="stay-card">
+            <span class="stay-date">FEB 26 - FEB 28</span>
+            <span class="label label-stay">Stay</span>
+            <b>葛飾區 Tateishi</b>
+            <span class="stay-addr">1 Chome-2-9 Tateishi, Tokyo</span>
+            <a href="https://www.google.com/maps/search/?api=1&query=1+Chome-2-9+Tateishi+Katsushika+Tokyo" class="nav-btn" style="margin-top:10px; height:32px; font-size:11px;">📍 開啟導航</a>
         </div>
     </div>
 
-    <div class="section-title">
-        <span>TODAY · FEB 21</span>
-        <span class="weather-info">東京 ☁️ 8°C</span>
-    </div>
-
+    <div class="section-title"><span>DAY 1 · FEB 21 (SAT)</span><span>東京 ☁️ 8°C</span></div>
     <div class="card">
-        <div class="card-header">
-            <span class="type-tag tag-transport">大眾交通</span>
-        </div>
-        <div class="location-name">成田機場 ➔ 上野</div>
+        <span class="time-slot">06:30 - 08:30</span>
+        <div class="location-name">成田機場入境</div>
         <div class="description">
-            搭乘 <b>Skyliner</b> (約 41 分鐘)。<br>
-            攻略：抵達後往京成線標誌走，自動機台領票。
+            <span class="label label-must">提醒</span> 請先至京成電鐵櫃台領取 Skyliner 票卷。<br>
+            <b>交通費：</b>￥2,570 (Skyliner)
         </div>
-        <a href="https://www.google.com/maps/dir/?api=1&destination=Ueno+Station" class="nav-btn">🧭 導航至上野站</a>
+        <div class="btn-group">
+            <a href="https://www.google.com/maps/search/?api=1&query=Narita+Airport+Terminal+2+3" class="nav-btn">🧭 機場地圖</a>
+        </div>
     </div>
 
+    <div class="section-title"><span>DAY 2 · FEB 22 (SUN)</span><span>東京 ☀️ 10°C</span></div>
     <div class="card">
-        <div class="card-header">
-            <span class="type-tag tag-ski">雪具裝備採買</span>
-        </div>
-        <div class="location-name">Switch Active Sports</div>
+        <span class="time-slot">19:30 預約</span>
+        <div class="location-name">よろにく (蕃 Yoroniku)</div>
         <div class="description">
-            <span class="label label-must-eat">必買</span> <b>年度款雪衣、防摔褲</b>
+            <span class="label label-food">燒肉</span> 惠比壽名店<br>
+            <b>攻略：</b>這家店有專人代烤，必點「シルクロース」(絲滑牛背肉)。
         </div>
-        
-        <label class="check-item"><input type="checkbox"> 新款雪板 (Burton)</label>
-        <label class="check-item"><input type="checkbox"> 護目鏡 (防霧加強)</label>
-        <label class="check-item"><input type="checkbox"> 耐寒手套</label>
-        <label class="check-item"><input type="checkbox"> 厚雪襪 *3</label>
-
-        <a href="https://www.google.com/maps/search/?api=1&query=Switch+Active+Sports+East" class="nav-btn" style="margin-top:15px;">📍 店面導航</a>
+        <div class="btn-group">
+            <a href="https://www.google.com/maps/search/?api=1&query=Yoroniku+Ebisu" class="nav-btn">🍴 餐廳導航</a>
+        </div>
     </div>
 
-    <div class="section-title">
-        <span>UPCOMING · FEB 22</span>
-        <span class="weather-info">東京 ☀️ 10°C</span>
-    </div>
-
+    <div class="section-title"><span>DAY 3 · FEB 23 (MON)</span><span>越後湯澤 ❄️ -3°C</span></div>
     <div class="card">
-        <div class="card-header">
-            <span class="type-tag tag-food">美食預約</span>
-        </div>
-        <div class="location-name">Yoroniku Ebisu (蕃)</div>
+        <span class="time-slot">交通移動</span>
+        <div class="location-name">上野 ➔ 越後湯澤 ➔ 石打丸山</div>
         <div class="description">
-            <span class="label label-reserve">代號: R77821</span>
-            <b>必點：絲滑牛背肉、松露和牛</b><br>
-            19:30 預約，建議穿著休閒正式。
+            1. 搭乘上越新幹線 (約 1 小時 15 分)。<br>
+            2. 抵達越後湯澤站後，搭乘接駁車往石打丸山。<br>
+            <b>費用：</b>Pass 涵蓋範圍。
         </div>
-        <a href="https://www.google.com/maps/search/?api=1&query=Yoroniku+Ebisu" class="nav-btn">🍴 導航至餐廳</a>
+        <div class="btn-group">
+            <a href="https://www.google.com/maps/search/?api=1&query=Echigo-Yuzawa+Station" class="nav-btn">🚄 導航至湯澤站</a>
+        </div>
+    </div>
+
+    <div class="section-title"><span>DAY 7 · FEB 27 (FRI)</span><span>東京 ☀️ 9°C</span></div>
+    <div class="card">
+        <span class="time-slot">15:00 Check-in</span>
+        <div class="location-name">葛飾區住宿 (Tateishi)</div>
+        <div class="description">
+            <span class="label label-stay">新飯店</span> <b>1 Chome-2-9 Tateishi</b><br>
+            這區非常有昭和下町氛圍，推薦晚上去「立石仲見世商店街」體驗居酒屋文化。
+        </div>
+        <div class="btn-group">
+            <a href="https://www.google.com/maps/search/?api=1&query=1+Chome-2-9+Tateishi+Katsushika+Tokyo" class="nav-btn">📍 導航至住宿</a>
+        </div>
+    </div>
+
+    <div class="section-title"><span>DAY 8 · FEB 28 (SAT)</span><span>東京回程</span></div>
+    <div class="card" style="border: 2px solid #E8B49A;">
+        <span class="time-slot">13:30 前須抵達</span>
+        <div class="location-name">成田機場 T3 (樂桃航空)</div>
+        <div class="description">
+            <span class="label label-must">警告</span> <b>16:35 起飛</b>。樂桃在 T3，建議從上野搭 Skyliner 預留 3 小時抵達機場。
+        </div>
+        <div class="btn-group">
+            <a href="https://www.google.com/maps/search/?api=1&query=Narita+Airport+Terminal+3" class="nav-btn">✈️ 導航至 T3</a>
+        </div>
     </div>
 
     <nav class="bottom-nav">
-        <a href="#" class="nav-item active">
-            <span class="nav-icon">🗓️</span>行程
-        </a>
-        <a href="#" class="nav-item">
-            <span class="nav-icon">✈️</span>航班
-        </a>
-        <a href="#" class="nav-item">
-            <span class="nav-icon">💰</span>預算
-        </a>
-        <a href="#" class="nav-item">
-            <span class="nav-icon">📞</span>聯絡
-        </a>
+        <a href="#" class="nav-item"><span class="nav-icon">🗓️</span>行程</a>
+        <a href="#" class="nav-item"><span class="nav-icon">💰</span>預算</a>
+        <a href="#" class="nav-item"><span class="nav-icon">🛍️</span>購物</a>
+        <a href="#" class="nav-item"><span class="nav-icon">ℹ️</span>須知</a>
     </nav>
 
     <script>
-        // 更新時間功能
         function updateTime() {
             const now = new Date();
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-            document.getElementById('clock').innerText = now.toLocaleDateString('zh-TW', options);
+            const opt = { weekday: 'short', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+            document.getElementById('clock').innerText = now.toLocaleString('zh-TW', opt);
         }
-        setInterval(updateTime, 1000);
-        updateTime();
+        setInterval(updateTime, 1000); updateTime();
 
-        // 簡單的點擊勾選持久化建議 (可選)
-        document.querySelectorAll('input[type="checkbox"]').forEach((cb, index) => {
-            cb.addEventListener('change', () => {
-                localStorage.setItem('ski-item-' + index, cb.checked);
-            });
-            // 讀取狀態
-            const checked = localStorage.getItem('ski-item-' + index) === 'true';
-            cb.checked = checked;
+        document.querySelectorAll('input[type="checkbox"]').forEach((cb, i) => {
+            cb.checked = localStorage.getItem('trip-cb-'+i) === 'true';
+            cb.onchange = () => localStorage.setItem('trip-cb-'+i, cb.checked);
         });
     </script>
 </body>
