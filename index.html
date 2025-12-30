@@ -1,210 +1,79 @@
-<!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>2026 日本滑雪行</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-color: #FBFBFB; --card-bg: #FFFFFF; --text-main: #2D2D2D; --text-sub: #8C8C8C;
-            --accent-ski: #5B7065; --accent-food: #D4A373; --border-color: #EFEFEF; --danger: #D65A5A;
+/**
+ * ==========================================
+ * 完整行程資料庫 (Day 1 - Day 8)
+ * ==========================================
+ */
+const tripData = {
+    hotels: [
+        { date: "FEB 21 - FEB 23", name: "上野/淺草區飯店", addr: "靠近上野新幹線站", map: "" },
+        { date: "FEB 23 - FEB 26", name: "石打丸山住宿 (Villa)", addr: "190-1 Ishiuchi, Niigata", map: "https://maps.app.goo.gl/9" },
+        { date: "FEB 26 - FEB 28", name: "葛飾區 Tateishi (下町)", addr: "1 Chome-2-9 Tateishi, Tokyo", map: "https://maps.app.goo.gl/10" }
+    ],
+    days: [
+        { 
+            title: "DAY 1 · FEB 21 (SAT)", weather: "東京 ☁️ 8°C", 
+            time: "06:30 - 08:30", loc: "成田機場入境 ➔ 上野", 
+            label: "交通", labelClass: "label-must",
+            desc: "搭乘 Skyliner 前往上野，辦理飯店寄放行李。",
+            info: "1. 京成電鐵櫃台換票。<br>2. 飯店寄行李後可先去『神田雪具街』補貨。<br>3. 費用：Skyliner ￥2,570。",
+            map: "https://maps.app.goo.gl/11", mapText: "🧭 機場地圖"
+        },
+        { 
+            title: "DAY 2 · FEB 22 (SUN)", weather: "東京 ☀️ 10°C", 
+            time: "19:30 預約", loc: "よろにく (蕃 Yoroniku) 燒肉", 
+            label: "美食", labelClass: "label-food",
+            desc: "惠比壽名店。專人代烤，必吃絲滑牛。",
+            info: "1. 預約編號在 Email。<br>2. 這天下午可排澀谷或惠比壽逛街。<br>3. 記得準時，這家店遲到會取消。",
+            map: "https://maps.app.goo.gl/2", mapText: "🍴 餐廳導航"
+        },
+        { 
+            title: "DAY 3 · FEB 23 (MON)", weather: "越後湯澤 ❄️ -3°C", 
+            time: "交通移動", loc: "上野 ➔ 越後湯澤 ➔ 石打丸山", 
+            label: "移動日", labelClass: "label-must",
+            desc: "搭乘新幹線前往雪場。開啟滑雪行程！",
+            info: "1. 上越新幹線約 75 分鐘。<br>2. 抵達後搭飯店接駁車。<br>3. 建議在越後湯澤站內買清酒與小點心。",
+            map: "https://maps.app.goo.gl/12", mapText: "🚄 導航至湯澤站"
+        },
+        { 
+            title: "DAY 4 · FEB 24 (TUE)", weather: "石打丸山 ❄️ -5°C", 
+            time: "全天", loc: "石打丸山滑雪場 (Ski Day 1)", 
+            label: "滑雪", labelClass: "label-ski",
+            desc: "練習日。享受全日本最美的景觀雪場之一。",
+            info: "1. 推薦去雪場內的『雲之茶屋』拍照。<br>2. 記得帶噴霧式防曬，雪地反射很強。<br>3. 午餐可在 Resort Center 解決。",
+            map: "#", mapText: "🏂 雪場地圖"
+        },
+        { 
+            title: "DAY 5 · FEB 25 (WED)", weather: "石打丸山 ❄️ -5°C", 
+            time: "全天", loc: "石打丸山滑雪場 (Ski Day 2)", 
+            label: "滑雪", labelClass: "label-ski",
+            desc: "進階練習或挑戰其他雪道。晚上可考慮夜滑。",
+            info: "1. 石打丸山的夜滑規模很大，氣氛極佳。<br>2. 注意滑雪裝備乾燥情形。<br>3. 晚餐可在民宿或附近食堂解決。",
+            map: "#", mapText: "🏂 雪場地圖"
+        },
+        { 
+            title: "DAY 6 · FEB 26 (THU)", weather: "湯澤 ➔ 東京 ☁️ 9°C", 
+            time: "下午移動", loc: "越後湯澤 ➔ 葛飾區 Tateishi", 
+            label: "移動日", labelClass: "label-must",
+            desc: "告別雪場，回到東京下町區體驗昭和氛圍。",
+            info: "1. 早上可做最後練習，下午搭車回東京。<br>2. Check-in 葛飾區住宿。<br>3. 去立石仲見世商店街吃道地居酒屋。",
+            map: "https://maps.app.goo.gl/10", mapText: "📍 導航至住宿"
+        },
+        { 
+            title: "DAY 7 · FEB 27 (FRI)", weather: "東京 ☀️ 9°C", 
+            time: "全天", loc: "東京下町慢活 / 購物補貨", 
+            label: "自由行", labelClass: "label-food",
+            desc: "最後的購物與伴手禮準備。",
+            info: "1. 推薦：淺草雷門、晴空塔都在附近。<br>2. 整理行李，計算退稅與行李重量。<br>3. 晚上可預約最後的大餐。",
+            map: "#", mapText: "🗺️ 周邊地圖"
+        },
+        { 
+            title: "DAY 8 · FEB 28 (SAT)", weather: "東京 ➔ 回程", 
+            time: "13:30 抵達", loc: "成田機場 T3 (樂桃航空)", 
+            label: "回程", labelClass: "label-must",
+            desc: "16:35 起飛，預留足夠時間前往機場。",
+            info: "1. 樂桃在 T3，需從 T2 搭接駁車或走路。<br>2. Skyliner 建議提前預約座位。<br>3. 檢查護照、行動電源是否在隨身行李。",
+            map: "https://maps.app.goo.gl/13", mapText: "✈️ 導航至 T3"
         }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Noto Sans TC', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px 16px 100px 16px; }
-
-        .page { display: none; }
-        .page.active { display: block; }
-
-        header { margin-bottom: 25px; border-left: 4px solid var(--accent-ski); padding-left: 15px; }
-        h1 { font-size: 24px; margin: 0; }
-
-        /* 記帳看板 */
-        .budget-header { 
-            background: var(--accent-ski); color: white; border-radius: 24px; 
-            padding: 30px 25px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
-        }
-        .total-amount { font-size: 36px; font-weight: 800; margin-top: 5px; }
-        .rate-mini-box { background: rgba(255,255,255,0.15); padding: 10px; border-radius: 12px; font-size: 11px; text-align: center; }
-        .rate-mini-box input { 
-            width: 55px; background: white; border: none; color: var(--accent-ski); 
-            font-weight: bold; text-align: center; border-radius: 6px; padding: 4px; margin-top: 5px;
-        }
-
-        /* 輸入與編輯區 */
-        .input-group { background: white; border-radius: 18px; padding: 18px; border: 1px solid var(--border-color); margin-bottom: 15px; }
-        .edit-info { 
-            display: none; background: #FFF9E6; color: #856404; padding: 10px; 
-            border-radius: 10px; font-size: 12px; margin-bottom: 12px; border-left: 4px solid #FFC107;
-        }
-        .input-row { display: flex; gap: 8px; margin-bottom: 8px; }
-        input, select { border: 1px solid #DDD; border-radius: 10px; padding: 12px; font-size: 14px; flex: 1; }
-        .add-btn { background: var(--accent-ski); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; font-size: 16px; }
-
-        /* 記帳列表與當時匯率 */
-        .expense-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border-color); }
-        .exp-main { display: flex; justify-content: space-between; align-items: flex-start; }
-        .exp-detail { flex: 1; }
-        .exp-price { text-align: right; min-width: 100px; }
-        .rate-tag { font-size: 10px; color: #AAA; background: #F8F8F8; padding: 2px 6px; border-radius: 4px; margin-top: 2px; display: inline-block; }
-        .exp-ops { display: flex; gap: 15px; margin-top: 12px; border-top: 1px solid #F5F5F5; padding-top: 10px; justify-content: flex-end; }
-        .op-btn { font-size: 13px; border: none; background: none; color: var(--text-sub); }
-
-        /* 導航 */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 80px; background: white; display: flex; border-top: 1px solid var(--border-color); }
-        .nav-tab { flex: 1; border: none; background: none; color: var(--text-sub); font-size: 11px; }
-        .nav-tab.active { color: var(--accent-ski); font-weight: bold; }
-        .nav-icon { font-size: 24px; display: block; margin-bottom: 2px; }
-    </style>
-</head>
-<body>
-
-    <header><h1 id="header-title">2026 日本滑雪行</h1></header>
-
-    <main id="page-itinerary" class="page active">
-        <div id="hotel-list" class="stay-section"></div>
-        <div id="day-list"></div>
-    </main>
-
-    <main id="page-budget" class="page">
-        <div class="budget-header">
-            <div>
-                <span style="font-size: 14px; opacity: 0.9;">預算累計 (TWD)</span>
-                <div id="total-twd" class="total-amount">NT$ 0</div>
-            </div>
-            <div class="rate-mini-box">
-                當前匯率設定<br>
-                <input type="number" step="0.001" id="current-rate" onchange="updateRate()">
-            </div>
-        </div>
-
-        <div class="input-group">
-            <div id="edit-msg" class="edit-info">正在編輯</div>
-            <input type="hidden" id="edit-id">
-            <div class="input-row">
-                <input type="text" id="exp-name" placeholder="項目">
-                <select id="exp-cat">
-                    <option value="🍽️ 美食">美食</option><option value="🚄 交通">交通</option>
-                    <option value="🏂 滑雪">滑雪</option><option value="🛍️ 購物">購物</option>
-                </select>
-            </div>
-            <div class="input-row">
-                <input type="number" id="exp-jpy" placeholder="日幣金額">
-                <input type="text" id="exp-note" placeholder="備註">
-            </div>
-            <button id="submit-btn" class="add-btn" onclick="addExpense()">確認新增</button>
-        </div>
-        <div id="expense-list"></div>
-    </main>
-
-    <nav class="bottom-nav">
-        <button onclick="switchTab('itinerary')" id="tab-itinerary" class="nav-tab active"><span class="nav-icon">🗓️</span>行程</button>
-        <button onclick="switchTab('budget')" id="tab-budget" class="nav-tab"><span class="nav-icon">💰</span>記帳</button>
-    </nav>
-
-    <script>
-        // 設定與資料儲存
-        let config = JSON.parse(localStorage.getItem('ski_cfg')) || {rate: 0.211};
-        let expenses = JSON.parse(localStorage.getItem('ski_exp')) || [];
-        document.getElementById('current-rate').value = config.rate;
-
-        function updateRate() {
-            config.rate = parseFloat(document.getElementById('current-rate').value);
-            localStorage.setItem('ski_cfg', JSON.stringify(config));
-            renderExp(); 
-        }
-
-        function addExpense() {
-            const n = document.getElementById('exp-name').value, 
-                  j = document.getElementById('exp-jpy').value, 
-                  nt = document.getElementById('exp-note').value, 
-                  c = document.getElementById('exp-cat').value, 
-                  editId = document.getElementById('edit-id').value;
-            
-            if(!n || !j) return;
-
-            // 計算台幣：使用當前匯率
-            const finalRate = config.rate;
-            const newTwd = Math.round(j * finalRate);
-
-            if(editId) {
-                const idx = expenses.findIndex(e => e.id == editId);
-                expenses[idx] = { ...expenses[idx], n, j:parseInt(j), c, nt, twd: newTwd, rateAtTime: finalRate };
-                cancelEdit();
-            } else {
-                expenses.unshift({id:Date.now(), n, j:parseInt(j), c, nt, twd: newTwd, rateAtTime: finalRate});
-            }
-            
-            localStorage.setItem('ski_exp', JSON.stringify(expenses));
-            renderExp();
-            clearInput();
-        }
-
-        function editExpense(id) {
-            const item = expenses.find(e => e.id == id);
-            document.getElementById('exp-name').value = item.n;
-            document.getElementById('exp-jpy').value = item.j;
-            document.getElementById('exp-cat').value = item.c;
-            document.getElementById('exp-note').value = item.nt;
-            document.getElementById('edit-id').value = item.id;
-            
-            document.getElementById('edit-msg').style.display = 'block';
-            document.getElementById('edit-msg').innerHTML = `<b>修改模式</b>：儲存後將以新匯率 <b>${config.rate}</b> 重新計算<br><small>(原紀錄匯率: ${item.rateAtTime || '無資料'})</small>`;
-            document.getElementById('submit-btn').innerText = '儲存並更新匯率計算';
-            document.getElementById('submit-btn').style.background = '#D4A373';
-            window.scrollTo(0, 0);
-        }
-
-        function cancelEdit() {
-            document.getElementById('edit-id').value = '';
-            document.getElementById('edit-msg').style.display = 'none';
-            document.getElementById('submit-btn').innerText = '確認新增';
-            document.getElementById('submit-btn').style.background = '#5B7065';
-        }
-
-        function renderExp() {
-            const l = document.getElementById('expense-list'); l.innerHTML = ''; let total = 0;
-            expenses.forEach(i => {
-                total += i.twd;
-                l.innerHTML += `
-                <div class="expense-item">
-                    <div class="exp-main">
-                        <div class="exp-detail">
-                            <b>${i.c} ${i.n}</b><br>
-                            <small style="color:#888;">${i.nt||''}</small>
-                        </div>
-                        <div class="exp-price">
-                            <b style="font-size:16px;">¥${i.j.toLocaleString()}</b><br>
-                            <div style="color:var(--accent-ski); font-weight:bold; font-size:14px;">NT$ ${i.twd.toLocaleString()}</div>
-                            <span class="rate-tag">Rate: ${i.rateAtTime || '--'}</span>
-                        </div>
-                    </div>
-                    <div class="exp-ops">
-                        <button class="op-btn" onclick="editExpense(${i.id})">✎ 編輯</button>
-                        <button class="op-btn del" onclick="deleteExpense(${i.id})">✕ 刪除</button>
-                    </div>
-                </div>`;
-            });
-            document.getElementById('total-twd').innerText = 'NT$ ' + total.toLocaleString();
-        }
-
-        function deleteExpense(id) {
-            if(confirm('確定刪除這筆紀錄？')) {
-                expenses = expenses.filter(e => e.id != id);
-                localStorage.setItem('ski_exp', JSON.stringify(expenses));
-                renderExp();
-            }
-        }
-
-        function clearInput() { document.getElementById('exp-name').value=''; document.getElementById('exp-jpy').value=''; document.getElementById('exp-note').value=''; }
-        function switchTab(t) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('page-'+t).classList.add('active');
-            document.getElementById('tab-'+t).classList.add('active');
-        }
-
-        renderExp();
-    </script>
-</body>
-</html>
+    ],
+    shopping: ["雪衣/雪褲 (神田)", "護目鏡", "滑雪襪", "藥妝", "立石商店街雜貨"]
+};
