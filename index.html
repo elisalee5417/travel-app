@@ -19,44 +19,40 @@
         header { margin-bottom: 25px; border-left: 4px solid var(--accent-ski); padding-left: 15px; }
         h1 { font-size: 24px; margin: 0; }
 
-        /* 記帳看板強化 */
+        /* 記帳看板 */
         .budget-header { 
             background: var(--accent-ski); color: white; border-radius: 24px; 
             padding: 30px 25px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 8px 20px rgba(91, 112, 101, 0.2);
         }
-        .total-amount { font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-top: 5px; }
+        .total-amount { font-size: 36px; font-weight: 800; margin-top: 5px; }
         .rate-mini-box { background: rgba(255,255,255,0.15); padding: 10px; border-radius: 12px; font-size: 11px; text-align: center; }
         .rate-mini-box input { 
             width: 55px; background: white; border: none; color: var(--accent-ski); 
             font-weight: bold; text-align: center; border-radius: 6px; padding: 4px; margin-top: 5px;
         }
 
-        /* 輸入區與編輯提示 */
+        /* 輸入與編輯區 */
         .input-group { background: white; border-radius: 18px; padding: 18px; border: 1px solid var(--border-color); margin-bottom: 15px; }
         .edit-info { 
-            display: none; background: #FFF9E6; color: #856404; padding: 8px 12px; 
-            border-radius: 8px; font-size: 12px; margin-bottom: 10px; border-left: 3px solid #FFC107;
+            display: none; background: #FFF9E6; color: #856404; padding: 10px; 
+            border-radius: 10px; font-size: 12px; margin-bottom: 12px; border-left: 4px solid #FFC107;
         }
         .input-row { display: flex; gap: 8px; margin-bottom: 8px; }
         input, select { border: 1px solid #DDD; border-radius: 10px; padding: 12px; font-size: 14px; flex: 1; }
         .add-btn { background: var(--accent-ski); color: white; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; font-size: 16px; }
 
-        /* 行程與紀錄 */
-        .stay-section { display: flex; overflow-x: auto; gap: 12px; margin-bottom: 25px; }
-        .stay-card { min-width: 260px; background: #fff; padding: 15px; border-radius: 16px; border: 1px solid var(--border-color); }
-        .section-title { font-size: 13px; font-weight: 700; color: var(--text-sub); margin: 25px 0 10px; display: flex; justify-content: space-between; }
-        .card { background: var(--card-bg); border-radius: 18px; padding: 18px; margin-bottom: 15px; border: 1px solid var(--border-color); }
-        
+        /* 記帳列表與當時匯率 */
         .expense-item { background: white; border-radius: 15px; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border-color); }
-        .exp-main { display: flex; justify-content: space-between; }
+        .exp-main { display: flex; justify-content: space-between; align-items: flex-start; }
+        .exp-detail { flex: 1; }
+        .exp-price { text-align: right; min-width: 100px; }
+        .rate-tag { font-size: 10px; color: #AAA; background: #F8F8F8; padding: 2px 6px; border-radius: 4px; margin-top: 2px; display: inline-block; }
         .exp-ops { display: flex; gap: 15px; margin-top: 12px; border-top: 1px solid #F5F5F5; padding-top: 10px; justify-content: flex-end; }
-        .op-btn { font-size: 13px; border: none; background: none; color: var(--text-sub); font-weight: 500; }
-        .op-btn.del { color: var(--danger); }
+        .op-btn { font-size: 13px; border: none; background: none; color: var(--text-sub); }
 
         /* 導航 */
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 80px; background: white; display: flex; border-top: 1px solid var(--border-color); z-index: 1000; }
-        .nav-tab { flex: 1; border: none; background: none; color: var(--text-sub); font-size: 11px; padding-top: 10px; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 80px; background: white; display: flex; border-top: 1px solid var(--border-color); }
+        .nav-tab { flex: 1; border: none; background: none; color: var(--text-sub); font-size: 11px; }
         .nav-tab.active { color: var(--accent-ski); font-weight: bold; }
         .nav-icon { font-size: 24px; display: block; margin-bottom: 2px; }
     </style>
@@ -73,20 +69,20 @@
     <main id="page-budget" class="page">
         <div class="budget-header">
             <div>
-                <span style="font-size: 14px; font-weight: 500; opacity: 0.9;">預算累計 (TWD)</span>
+                <span style="font-size: 14px; opacity: 0.9;">預算累計 (TWD)</span>
                 <div id="total-twd" class="total-amount">NT$ 0</div>
             </div>
             <div class="rate-mini-box">
-                當前匯率<br>
+                當前匯率設定<br>
                 <input type="number" step="0.001" id="current-rate" onchange="updateRate()">
             </div>
         </div>
 
         <div class="input-group">
-            <div id="edit-msg" class="edit-info">模式：修改項目 (將套用當前匯率)</div>
+            <div id="edit-msg" class="edit-info">正在編輯</div>
             <input type="hidden" id="edit-id">
             <div class="input-row">
-                <input type="text" id="exp-name" placeholder="消費項目">
+                <input type="text" id="exp-name" placeholder="項目">
                 <select id="exp-cat">
                     <option value="🍽️ 美食">美食</option><option value="🚄 交通">交通</option>
                     <option value="🏂 滑雪">滑雪</option><option value="🛍️ 購物">購物</option>
@@ -101,38 +97,13 @@
         <div id="expense-list"></div>
     </main>
 
-    <main id="page-shopping" class="page">
-        <div class="section-title">購物清單</div>
-        <div class="card" id="shopping-list"></div>
-    </main>
-
     <nav class="bottom-nav">
         <button onclick="switchTab('itinerary')" id="tab-itinerary" class="nav-tab active"><span class="nav-icon">🗓️</span>行程</button>
         <button onclick="switchTab('budget')" id="tab-budget" class="nav-tab"><span class="nav-icon">💰</span>記帳</button>
-        <button onclick="switchTab('shopping')" id="tab-shopping" class="nav-tab"><span class="nav-icon">🛍️</span>購物</button>
     </nav>
 
     <script>
-        const tripData = {
-            hotels: [{ date: "FEB 21 - 23", name: "上野飯店", addr: "靠近新幹線站" }, { date: "FEB 23 - 26", name: "石打丸山住宿", addr: "Ishiuchi, Niigata" }],
-            days: [{ title: "DAY 1 · FEB 21", weather: "☁️ 8°C", time: "06:30", loc: "成田機場", desc: "換 Skyliner 票券。", info: "櫃台在 T2。", map: "#", mapText: "地圖" }],
-            shopping: ["雪衣", "護目鏡", "滑雪襪"]
-        };
-
-        function initTrip() {
-            document.getElementById('hotel-list').innerHTML = tripData.hotels.map(h => `<div class="stay-card"><b>${h.name}</b><br><small>${h.addr}</small></div>`).join('');
-            document.getElementById('day-list').innerHTML = tripData.days.map((d, i) => `<div class="section-title"><span>${d.title}</span></div><div class="card"><b>${d.loc}</b><br><small>${d.desc}</small></div>`).join('');
-            document.getElementById('shopping-list').innerHTML = tripData.shopping.map(s => `<div><input type="checkbox"> ${s}</div>`).join('');
-        }
-
-        function switchTab(t) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
-            document.getElementById('page-'+t).classList.add('active');
-            document.getElementById('tab-'+t).classList.add('active');
-        }
-
-        // 記帳邏輯
+        // 設定與資料儲存
         let config = JSON.parse(localStorage.getItem('ski_cfg')) || {rate: 0.211};
         let expenses = JSON.parse(localStorage.getItem('ski_exp')) || [];
         document.getElementById('current-rate').value = config.rate;
@@ -140,8 +111,7 @@
         function updateRate() {
             config.rate = parseFloat(document.getElementById('current-rate').value);
             localStorage.setItem('ski_cfg', JSON.stringify(config));
-            // 詢問是否要更新所有舊帳目的匯率（可選功能，目前僅更新總額顯示）
-            renderExp();
+            renderExp(); 
         }
 
         function addExpense() {
@@ -153,14 +123,16 @@
             
             if(!n || !j) return;
 
-            const newTwd = Math.round(j * config.rate);
+            // 計算台幣：使用當前匯率
+            const finalRate = config.rate;
+            const newTwd = Math.round(j * finalRate);
 
             if(editId) {
                 const idx = expenses.findIndex(e => e.id == editId);
-                expenses[idx] = { ...expenses[idx], n, j:parseInt(j), c, nt, twd: newTwd, rateAtTime: config.rate };
+                expenses[idx] = { ...expenses[idx], n, j:parseInt(j), c, nt, twd: newTwd, rateAtTime: finalRate };
                 cancelEdit();
             } else {
-                expenses.unshift({id:Date.now(), n, j:parseInt(j), c, nt, twd: newTwd, rateAtTime: config.rate});
+                expenses.unshift({id:Date.now(), n, j:parseInt(j), c, nt, twd: newTwd, rateAtTime: finalRate});
             }
             
             localStorage.setItem('ski_exp', JSON.stringify(expenses));
@@ -176,10 +148,9 @@
             document.getElementById('exp-note').value = item.nt;
             document.getElementById('edit-id').value = item.id;
             
-            // 顯示編輯提示與匯率更新說明
             document.getElementById('edit-msg').style.display = 'block';
-            document.getElementById('edit-msg').innerText = `編輯中：將使用最新匯率 ${config.rate} 重新計算 (原匯率: ${item.rateAtTime || '未知'})`;
-            document.getElementById('submit-btn').innerText = '更新紀錄並重新計算';
+            document.getElementById('edit-msg').innerHTML = `<b>修改模式</b>：儲存後將以新匯率 <b>${config.rate}</b> 重新計算<br><small>(原紀錄匯率: ${item.rateAtTime || '無資料'})</small>`;
+            document.getElementById('submit-btn').innerText = '儲存並更新匯率計算';
             document.getElementById('submit-btn').style.background = '#D4A373';
             window.scrollTo(0, 0);
         }
@@ -191,14 +162,6 @@
             document.getElementById('submit-btn').style.background = '#5B7065';
         }
 
-        function deleteExpense(id) {
-            if(confirm('確定刪除？')) {
-                expenses = expenses.filter(e => e.id != id);
-                localStorage.setItem('ski_exp', JSON.stringify(expenses));
-                renderExp();
-            }
-        }
-
         function renderExp() {
             const l = document.getElementById('expense-list'); l.innerHTML = ''; let total = 0;
             expenses.forEach(i => {
@@ -206,14 +169,17 @@
                 l.innerHTML += `
                 <div class="expense-item">
                     <div class="exp-main">
-                        <div><b>${i.c} ${i.n}</b><br><small style="color:#888;">${i.nt||''}</small></div>
-                        <div style="text-align:right">
+                        <div class="exp-detail">
+                            <b>${i.c} ${i.n}</b><br>
+                            <small style="color:#888;">${i.nt||''}</small>
+                        </div>
+                        <div class="exp-price">
                             <b style="font-size:16px;">¥${i.j.toLocaleString()}</b><br>
-                            <small style="color:var(--accent-ski); font-weight:bold;">NT$ ${i.twd.toLocaleString()}</small>
+                            <div style="color:var(--accent-ski); font-weight:bold; font-size:14px;">NT$ ${i.twd.toLocaleString()}</div>
+                            <span class="rate-tag">Rate: ${i.rateAtTime || '--'}</span>
                         </div>
                     </div>
                     <div class="exp-ops">
-                        <span style="font-size:10px; color:#CCC; flex:1;">Rate: ${i.rateAtTime || '--'}</span>
                         <button class="op-btn" onclick="editExpense(${i.id})">✎ 編輯</button>
                         <button class="op-btn del" onclick="deleteExpense(${i.id})">✕ 刪除</button>
                     </div>
@@ -222,9 +188,23 @@
             document.getElementById('total-twd').innerText = 'NT$ ' + total.toLocaleString();
         }
 
+        function deleteExpense(id) {
+            if(confirm('確定刪除這筆紀錄？')) {
+                expenses = expenses.filter(e => e.id != id);
+                localStorage.setItem('ski_exp', JSON.stringify(expenses));
+                renderExp();
+            }
+        }
+
         function clearInput() { document.getElementById('exp-name').value=''; document.getElementById('exp-jpy').value=''; document.getElementById('exp-note').value=''; }
-        
-        initTrip(); renderExp();
+        function switchTab(t) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('page-'+t).classList.add('active');
+            document.getElementById('tab-'+t).classList.add('active');
+        }
+
+        renderExp();
     </script>
 </body>
 </html>
